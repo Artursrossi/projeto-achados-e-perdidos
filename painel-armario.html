@@ -57,15 +57,19 @@
 <!-- ========== TOPBAR ========== -->
 <header class="sticky top-0 z-40 border-b border-brand-100 bg-white/80 backdrop-blur-xl">
   <div class="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
-    <a href="#" class="flex items-center gap-2.5" aria-label="Perdido? Achado!">
+    <a href="index.html" class="flex items-center gap-2.5" aria-label="Perdido? Achado! - voltar para a página inicial">
       <svg class="h-10 w-10"><use href="#logo-mark"/></svg>
-      <span class="hidden text-lg font-extrabold tracking-tight sm:inline">Perdido<span class="text-brand-600">?</span> Achado<span class="text-sun-500">!</span></span>
+      <span class="hidden text-lg font-extrabold tracking-tight lg:inline">Perdido<span class="text-brand-600">?</span> Achado<span class="text-sun-500">!</span></span>
     </a>
-    <div class="hidden items-center gap-2 rounded-full border border-brand-100 bg-brand-50 px-4 py-1.5 text-sm font-semibold text-brand-800 md:flex">
+    <nav class="flex rounded-xl bg-brand-50 p-1 text-sm font-bold" aria-label="Seções da empresa">
+      <a href="painel-armario.html" aria-current="page" class="rounded-lg bg-white px-4 py-2 text-brand-700 shadow-sm">Armário</a>
+      <a href="historico.html" class="rounded-lg px-4 py-2 text-ink-500 transition hover:text-brand-700">Histórico</a>
+    </nav>
+    <div class="hidden items-center gap-2 rounded-full border border-brand-100 bg-brand-50 px-4 py-1.5 text-sm font-semibold text-brand-800 lg:flex">
       <svg class="h-4 w-4"><use href="#i-pin"/></svg> Shopping Central · Unidade Centro
     </div>
     <div class="flex items-center gap-3">
-      <div class="text-right text-sm leading-tight"><p class="font-bold">Ana Souza</p><p class="text-xs text-ink-500">Atendimento</p></div>
+      <div class="hidden text-right text-sm leading-tight sm:block"><p class="font-bold">Ana Souza</p><p class="text-xs text-ink-500">Atendimento</p></div>
       <span class="grid h-10 w-10 place-items-center rounded-full bg-brand-600 text-sm font-bold text-white" aria-hidden="true">AS</span>
       <button class="rounded-xl border border-ink-100 p-2.5 text-ink-500 transition hover:bg-ink-100 hover:text-ink-900" aria-label="Sair" title="Sair"><svg class="h-5 w-5"><use href="#i-logout"/></svg></button>
     </div>
@@ -78,7 +82,7 @@
     <div>
       <p class="text-sm font-bold uppercase tracking-widest text-brand-600">Painel da empresa</p>
       <h1 class="mt-1 text-3xl font-extrabold tracking-tight">Armário de achados e perdidos</h1>
-      <p class="mt-1 text-ink-500">Itens guardados aguardando retirada pelo dono.</p>
+      <p class="mt-1 text-ink-500"><span class="lg:hidden">Shopping Central · Unidade Centro · </span>Itens guardados aguardando retirada pelo dono.</p>
     </div>
     <button id="openAdd" class="inline-flex items-center justify-center gap-2 rounded-xl bg-sun-400 px-5 py-3 text-sm font-extrabold text-ink-900 shadow-lg shadow-sun-400/30 transition hover:-translate-y-0.5 hover:bg-sun-300">
       <svg class="h-5 w-5"><use href="#i-plus"/></svg> Cadastrar item

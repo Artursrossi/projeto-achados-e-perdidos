@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Perdido? Achado! | Achados e perdidos para empresas</title>
+<meta name="description" content="Plataforma web para empresas gerenciarem itens achados e perdidos, e para qualquer pessoa encontrar o que perdeu, sem cadastro.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'] },
+        colors: {
+          brand: { 50:'#F6F0FF',100:'#EBDDFF',200:'#D7BCFF',300:'#BC8FFF',400:'#A862FF',500:'#9333F5',600:'#7C1FD6',700:'#6417AB',800:'#4C1280',900:'#2E0B4D' },
+          sun: { 300:'#FDE047', 400:'#FBBF24', 500:'#F59E0B', 600:'#D97706' },
+          ink: { 900:'#1A1030', 700:'#3B3354', 500:'#6B6485', 300:'#B7B2C8', 100:'#F1EFF7' }
+        }
+      }
+    }
+  }
+</script>
+<style>
+  body { background:#FCFBFF; color:#1A1030; }
+  .hero-bg { background:
+    radial-gradient(60% 50% at 85% 0%, rgba(168,98,255,.28), transparent 70%),
+    radial-gradient(45% 40% at 0% 20%, rgba(251,191,36,.20), transparent 70%),
+    #FCFBFF; }
+  .reveal { opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.visible { opacity:1; transform:none; }
+  .float { animation: float 6s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .pulse-dot { animation: pulse 2s infinite; }
+  @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(251,191,36,.6)} 70%{box-shadow:0 0 0 10px rgba(251,191,36,0)} 100%{box-shadow:0 0 0 0 rgba(251,191,36,0)} }
+  .tab-active { background:#fff; color:#6417AB; box-shadow:0 1px 6px rgba(46,11,77,.12); }
+  @media (prefers-reduced-motion: reduce){ .float,.pulse-dot{animation:none} .reveal{transition:none} }
+  :focus-visible { outline:3px solid #FBBF24; outline-offset:2px; border-radius:8px; }
+</style>
+</head>
+<body class="font-sans antialiased">
+
+<!-- ========== SVG SPRITES: LOGO + ÍCONES ========== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#A862FF"/><stop offset="1" stop-color="#6417AB"/>
+    </linearGradient>
+  </defs>
+  <!-- Ícone / marca d'água: lupa com check -->
+  <symbol id="logo-mark" viewBox="0 0 48 48">
+    <rect width="48" height="48" rx="14" fill="url(#lg)"/>
+    <circle cx="22" cy="21" r="11" fill="none" stroke="#fff" stroke-width="4"/>
+    <path d="M17 21.5l3.8 3.8L27.5 18" fill="none" stroke="#FBBF24" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M30.5 29.5L38 37" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/>
+  </symbol>
+  <!-- Ícones de recursos (traço, estilo Lucide) -->
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z M3.3 7.5L12 12.5l8.7-5 M12 22V12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-5.6 7-11a7 7 0 10-14 0c0 5.4 7 11 7 11z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="i-handoff" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4 M12 3l8 3v6c0 4.5-3.2 8.2-8 9-4.8-.8-8-4.5-8-9V6l8-3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10 M10 20V4 M16 20v-7 M22 20H2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 10V7a4 4 0 018 0v3" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<!-- ========== NAVBAR ========== -->
+<header class="sticky top-0 z-50 border-b border-brand-100/70 bg-white/75 backdrop-blur-xl">
+  <nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8" aria-label="Principal">
+    <a href="#" class="flex items-center gap-2.5" aria-label="Perdido? Achado! - início">
+      <svg class="h-10 w-10"><use href="#logo-mark"/></svg>
+      <span class="text-lg font-extrabold tracking-tight text-ink-900">Perdido<span class="text-brand-600">?</span> Achado<span class="text-sun-500">!</span></span>
+    </a>
+    <ul class="hidden items-center gap-8 text-sm font-semibold text-ink-700 md:flex">
+      <li><a class="hover:text-brand-600" href="#recursos">Recursos</a></li>
+      <li><a class="hover:text-brand-600" href="#beneficios">Benefícios</a></li>
+      <li><a class="hover:text-brand-600" href="#depoimentos">Depoimentos</a></li>
+      <li><a class="hover:text-brand-600" href="#precos">Preços</a></li>
+    </ul>
+    <div class="hidden items-center gap-3 md:flex">
+      <a href="#" class="text-sm font-semibold text-ink-700 hover:text-brand-600">Entrar</a>
+      <a href="#precos" class="rounded-xl bg-sun-400 px-5 py-2.5 text-sm font-bold text-ink-900 shadow-lg shadow-sun-400/30 transition hover:-translate-y-0.5 hover:bg-sun-300">Começar agora</a>
+    </div>
+    <button id="menuBtn" class="rounded-lg p-2 text-ink-900 md:hidden" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobileMenu">
+      <svg class="h-6 w-6"><use href="#i-menu"/></svg>
+    </button>
+  </nav>
+  <div id="mobileMenu" class="hidden border-t border-brand-100 bg-white px-4 pb-4 md:hidden">
+    <a class="block py-3 font-semibold" href="#recursos">Recursos</a>
+    <a class="block py-3 font-semibold" href="#beneficios">Benefícios</a>
+    <a class="block py-3 font-semibold" href="#depoimentos">Depoimentos</a>
+    <a class="block py-3 font-semibold" href="#precos">Preços</a>
+    <a href="#precos" class="mt-2 block rounded-xl bg-sun-400 px-5 py-3 text-center font-bold text-ink-900">Começar agora</a>
+  </div>
+</header>
+
+<main>
+<!-- ========== HERO ========== -->
+<section class="hero-bg overflow-hidden">
+  <div class="mx-auto grid max-w-7xl items-center gap-14 px-4 pb-20 pt-14 sm:px-6 lg:grid-cols-2 lg:px-8 lg:pb-28 lg:pt-20">
+    <div class="reveal">
+      <span class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white px-3.5 py-1.5 text-xs font-bold text-brand-700 shadow-sm">
+        <span class="pulse-dot h-2 w-2 rounded-full bg-sun-400"></span> Achados e perdidos, do jeito certo
+      </span>
+      <h1 class="mt-5 text-4xl font-extrabold leading-[1.08] tracking-tight text-ink-900 sm:text-5xl lg:text-6xl">
+        Acabou o caderno e a planilha.
+        <span class="bg-gradient-to-r from-brand-500 to-brand-700 bg-clip-text text-transparent">Achou aqui, volta pra casa.</span>
+      </h1>
+      <p class="mt-6 max-w-xl text-lg leading-relaxed text-ink-700">
+        A plataforma para empresas, estabelecimentos e organizações cadastrarem, guardarem e devolverem itens achados, com controle de prazos e histórico de retiradas. E quem perdeu algo busca <strong>sem precisar de cadastro</strong>.
+      </p>
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <a href="#precos" class="inline-flex items-center justify-center gap-2 rounded-xl bg-sun-400 px-7 py-3.5 font-bold text-ink-900 shadow-xl shadow-sun-400/30 transition hover:-translate-y-0.5 hover:bg-sun-300">
+          Cadastrar minha empresa <svg class="h-5 w-5"><use href="#i-arrow"/></svg>
+        </a>
+        <a href="#busca" class="inline-flex items-center justify-center gap-2 rounded-xl border border-brand-200 bg-white px-7 py-3.5 font-bold text-brand-700 transition hover:border-brand-400 hover:bg-brand-50">
+          Perdi um objeto
+        </a>
+      </div>
+      <ul class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-ink-500">
+        <li class="flex items-center gap-1.5"><svg class="h-4 w-4 text-brand-600"><use href="#i-check"/></svg> Busca pública sem cadastro</li>
+        <li class="flex items-center gap-1.5"><svg class="h-4 w-4 text-brand-600"><use href="#i-check"/></svg> Dados protegidos</li>
+        <li class="flex items-center gap-1.5"><svg class="h-4 w-4 text-brand-600"><use href="#i-check"/></svg> Assinatura mensal</li>
+      </ul>
+    </div>
+
+    <!-- MOCKUP INTERATIVO -->
+    <div class="reveal relative" id="busca">
+      <div class="absolute -inset-6 -z-10 rounded-[2.5rem] bg-gradient-to-br from-brand-300/40 to-sun-300/40 blur-3xl"></div>
+      <div class="rounded-3xl border border-white/70 bg-white/80 p-3 shadow-2xl shadow-brand-900/15 backdrop-blur-xl">
+        <div class="mb-3 flex items-center justify-between px-2 pt-1">
+          <div class="flex gap-1.5"><span class="h-3 w-3 rounded-full bg-red-300"></span><span class="h-3 w-3 rounded-full bg-sun-300"></span><span class="h-3 w-3 rounded-full bg-green-300"></span></div>
+          <div class="flex rounded-xl bg-brand-50 p-1 text-xs font-bold text-ink-500" role="tablist">
+            <button role="tab" id="tabEmp" class="tab-active rounded-lg px-3 py-1.5" aria-selected="true">Painel da empresa</button>
+            <button role="tab" id="tabBusca" class="rounded-lg px-3 py-1.5" aria-selected="false">Quem perdeu</button>
+          </div>
+        </div>
+
+        <!-- Painel empresa -->
+        <div id="paneEmp" class="rounded-2xl bg-white p-4 sm:p-5">
+          <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div class="rounded-xl bg-brand-50 p-3"><p class="text-[11px] font-semibold text-ink-500">Disponíveis</p><p class="text-2xl font-extrabold text-brand-700" data-count="128">0</p></div>
+            <div class="rounded-xl bg-green-50 p-3"><p class="text-[11px] font-semibold text-ink-500">Retirados</p><p class="text-2xl font-extrabold text-green-700" data-count="342">0</p></div>
+            <div class="rounded-xl bg-sun-300/30 p-3"><p class="text-[11px] font-semibold text-ink-500">Perto do prazo</p><p class="text-2xl font-extrabold text-sun-600" data-count="9">0</p></div>
+            <div class="rounded-xl bg-red-50 p-3"><p class="text-[11px] font-semibold text-ink-500">Prazo encerrado</p><p class="text-2xl font-extrabold text-red-600" data-count="4">0</p></div>
+          </div>
+          <p class="mb-2 mt-5 text-xs font-bold uppercase tracking-wide text-ink-500">Últimos itens cadastrados</p>
+          <ul class="space-y-2.5 text-sm">
+            <li class="flex items-center gap-3 rounded-xl border border-ink-100 p-2.5 transition hover:border-brand-300 hover:shadow-md">
+              <span class="grid h-11 w-11 place-items-center rounded-lg bg-brand-100 text-xl">🎒</span>
+              <div class="min-w-0 flex-1"><p class="truncate font-bold">Mochila preta com chaveiro</p><p class="text-xs text-ink-500">Bloco B · achado hoje, 09:42</p></div>
+              <span class="rounded-full bg-green-100 px-2.5 py-1 text-[11px] font-bold text-green-700">Disponível</span>
+            </li>
+            <li class="flex items-center gap-3 rounded-xl border border-ink-100 p-2.5 transition hover:border-brand-300 hover:shadow-md">
+              <span class="grid h-11 w-11 place-items-center rounded-lg bg-brand-100 text-xl">📱</span>
+              <div class="min-w-0 flex-1"><p class="truncate font-bold">Celular com capa azul</p><p class="text-xs text-ink-500">Praça de alimentação · 2 dias</p></div>
+              <span class="rounded-full bg-sun-300/50 px-2.5 py-1 text-[11px] font-bold text-sun-600">Vence em 3 dias</span>
+            </li>
+            <li class="flex items-center gap-3 rounded-xl border border-ink-100 p-2.5 transition hover:border-brand-300 hover:shadow-md">
+              <span class="grid h-11 w-11 place-items-center rounded-lg bg-brand-100 text-xl">🔑</span>
+              <div class="min-w-0 flex-1"><p class="truncate font-bold">Chave de carro com controle</p><p class="text-xs text-ink-500">Estacionamento · retirada hoje</p></div>
+              <span class="rounded-full bg-brand-100 px-2.5 py-1 text-[11px] font-bold text-brand-700">Retirado</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Busca pública -->
+        <div id="paneBusca" class="hidden rounded-2xl bg-white p-4 sm:p-5">
+          <p class="text-sm font-bold">O que você perdeu?</p>
+          <form id="searchForm" class="mt-3 space-y-3 text-sm">
+            <div class="grid grid-cols-2 gap-3">
+              <label class="block"><span class="text-xs font-semibold text-ink-500">Categoria</span>
+                <select class="mt-1 w-full rounded-xl border border-ink-300 bg-white px-3 py-2.5"><option>Mochila / bolsa</option><option>Eletrônico</option><option>Documentos</option><option>Chaves</option></select></label>
+              <label class="block"><span class="text-xs font-semibold text-ink-500">Local aproximado</span>
+                <input class="mt-1 w-full rounded-xl border border-ink-300 px-3 py-2.5" value="Centro, São Paulo"></label>
+            </div>
+            <label class="block"><span class="text-xs font-semibold text-ink-500">Descrição</span>
+              <input class="mt-1 w-full rounded-xl border border-ink-300 px-3 py-2.5" value="Mochila preta com chaveiro vermelho"></label>
+            <button class="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 py-3 font-bold text-white transition hover:bg-brand-700">
+              <svg class="h-5 w-5"><use href="#i-search"/></svg> Buscar meu item
+            </button>
+          </form>
+          <div id="searchResult" class="mt-4 hidden rounded-2xl border border-brand-200 bg-brand-50 p-4">
+            <div class="flex items-center justify-between">
+              <p class="text-xs font-bold uppercase tracking-wide text-brand-700">Possível correspondência</p>
+              <span class="rounded-full bg-green-100 px-2.5 py-1 text-[11px] font-extrabold text-green-700">92% compatível</span>
+            </div>
+            <div class="mt-3 flex items-center gap-3">
+              <span class="grid h-12 w-12 place-items-center rounded-xl bg-white text-2xl">🎒</span>
+              <div class="text-sm"><p class="font-bold">Mochila preta com chaveiro</p>
+                <p class="flex items-center gap-1 text-xs text-ink-500"><svg class="h-3.5 w-3.5"><use href="#i-pin"/></svg> Shopping Central · a 1,2 km de você</p></div>
+            </div>
+            <p class="mt-3 text-xs text-ink-700">Vá até a empresa com um documento. Ela confirma a entrega e registra a retirada.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="float absolute -bottom-6 -left-4 hidden items-center gap-3 rounded-2xl border border-white bg-white/90 px-4 py-3 shadow-xl backdrop-blur sm:flex">
+        <span class="grid h-9 w-9 place-items-center rounded-full bg-green-100 text-green-700"><svg class="h-5 w-5"><use href="#i-check"/></svg></span>
+        <div class="text-xs"><p class="font-bold">Entrega confirmada</p><p class="text-ink-500">Baixa registrada no histórico</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PROVA SOCIAL ========== -->
+<section class="border-y border-brand-100 bg-white">
+  <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-2 gap-8 text-center md:grid-cols-4">
+      <div><p class="text-3xl font-extrabold text-brand-700 sm:text-4xl">+2.400</p><p class="mt-1 text-sm font-medium text-ink-500">itens devolvidos</p></div>
+      <div><p class="text-3xl font-extrabold text-brand-700 sm:text-4xl">87%</p><p class="mt-1 text-sm font-medium text-ink-500">de itens com dono encontrado</p></div>
+      <div><p class="text-3xl font-extrabold text-brand-700 sm:text-4xl">+60</p><p class="mt-1 text-sm font-medium text-ink-500">empresas conectadas</p></div>
+      <div><p class="text-3xl font-extrabold text-brand-700 sm:text-4xl">99,9%</p><p class="mt-1 text-sm font-medium text-ink-500">de disponibilidade</p></div>
+    </div>
+    <p class="mt-8 text-center text-xs font-semibold uppercase tracking-widest text-ink-300">Pensado para</p>
+    <div class="mt-4 flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-lg font-extrabold text-ink-300">
+      <span>Shoppings</span><span>Universidades</span><span>Academias</span><span>Hotéis</span><span>Eventos</span><span>Transporte</span>
+    </div>
+    <p class="mt-4 text-center text-[11px] text-ink-300">* Números ilustrativos para o protótipo da página.</p>
+  </div>
+</section>
+
+<!-- ========== RECURSOS ========== -->
+<section id="recursos" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+  <div class="reveal mx-auto max-w-2xl text-center">
+    <p class="text-sm font-bold uppercase tracking-widest text-brand-600">Recursos</p>
+    <h2 class="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">Tudo para devolver cada item ao dono certo</h2>
+    <p class="mt-4 text-ink-700">Do cadastro à baixa, cada etapa tem controle, prazo e histórico.</p>
+  </div>
+  <div id="featureGrid" class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"></div>
+</section>
+
+<!-- ========== COMO FUNCIONA ========== -->
+<section class="bg-gradient-to-b from-brand-50 to-white py-20">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <p class="text-sm font-bold uppercase tracking-widest text-brand-600">Como funciona</p>
+      <h2 class="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">Do achado à devolução em 4 passos</h2>
+    </div>
+    <ol class="mt-12 grid gap-6 md:grid-cols-4">
+      <li class="reveal rounded-2xl bg-white p-6 shadow-lg shadow-brand-900/5"><span class="grid h-10 w-10 place-items-center rounded-full bg-brand-600 font-extrabold text-white">1</span><h3 class="mt-4 font-bold">A empresa cadastra</h3><p class="mt-2 text-sm text-ink-700">Foto, categoria, características, local, data e prazo de guarda.</p></li>
+      <li class="reveal rounded-2xl bg-white p-6 shadow-lg shadow-brand-900/5"><span class="grid h-10 w-10 place-items-center rounded-full bg-brand-600 font-extrabold text-white">2</span><h3 class="mt-4 font-bold">A pessoa busca</h3><p class="mt-2 text-sm text-ink-700">Descreve o que perdeu e onde, sem criar conta.</p></li>
+      <li class="reveal rounded-2xl bg-white p-6 shadow-lg shadow-brand-900/5"><span class="grid h-10 w-10 place-items-center rounded-full bg-brand-600 font-extrabold text-white">3</span><h3 class="mt-4 font-bold">O sistema cruza os dados</h3><p class="mt-2 text-sm text-ink-700">Categoria, descrição, imagem, local e período geram um ranking de compatibilidade.</p></li>
+      <li class="reveal rounded-2xl bg-white p-6 shadow-lg shadow-brand-900/5"><span class="grid h-10 w-10 place-items-center rounded-full bg-sun-400 font-extrabold text-ink-900">4</span><h3 class="mt-4 font-bold">Retirada registrada</h3><p class="mt-2 text-sm text-ink-700">A empresa confirma a entrega, dá baixa no item e guarda o histórico.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ========== DIFERENCIAIS ========== -->
+<section id="beneficios" class="mx-auto max-w-5xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+  <div class="reveal mx-auto max-w-2xl text-center">
+    <p class="text-sm font-bold uppercase tracking-widest text-brand-600">Por que nós?</p>
+    <h2 class="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">O jeito antigo contra o Perdido? Achado!</h2>
+  </div>
+  <div class="reveal mt-12 overflow-hidden rounded-3xl border border-brand-100 bg-white shadow-xl shadow-brand-900/5">
+    <div class="grid grid-cols-[1.1fr_1fr_1fr] bg-brand-50 text-xs font-extrabold uppercase tracking-wide sm:text-sm">
+      <div class="p-4 sm:p-5"></div>
+      <div class="p-4 text-center text-ink-500 sm:p-5">Caderno / planilha</div>
+      <div class="bg-brand-600 p-4 text-center text-white sm:p-5">Perdido? Achado!</div>
+    </div>
+    <div id="compareRows" class="divide-y divide-ink-100 text-sm"></div>
+  </div>
+</section>
+
+<!-- ========== PREÇOS ========== -->
+<section id="precos" class="bg-ink-900 py-20 text-white lg:py-28">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <p class="text-sm font-bold uppercase tracking-widest text-sun-400">Planos</p>
+      <h2 class="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">Assinatura mensal, sem pegadinhas</h2>
+      <p class="mt-4 text-brand-200">Quem perdeu o item nunca paga. Quem cadastra, escolhe o plano.</p>
+      <div class="mt-8 inline-flex rounded-xl bg-white/10 p-1 text-sm font-bold" role="group" aria-label="Período de cobrança">
+        <button id="billMonthly" class="rounded-lg bg-white px-5 py-2 text-ink-900" aria-pressed="true">Mensal</button>
+        <button id="billYearly" class="rounded-lg px-5 py-2 text-white" aria-pressed="false">Anual <span class="ml-1 rounded-full bg-sun-400 px-2 py-0.5 text-[10px] text-ink-900">-20%</span></button>
+      </div>
+    </div>
+    <div class="mt-12 grid items-stretch gap-6 lg:grid-cols-3">
+      <div class="reveal flex flex-col rounded-3xl border border-white/10 bg-white/5 p-8">
+        <h3 class="text-lg font-bold">Essencial</h3><p class="mt-1 text-sm text-brand-200">Para um único ponto de atendimento.</p>
+        <p class="mt-6"><span class="text-4xl font-extrabold" data-price="49">R$ 49</span><span class="text-brand-200">/mês</span></p>
+        <ul class="mt-6 flex-1 space-y-3 text-sm">
+          <li class="flex gap-2"><svg class="h-5 w-5 shrink-0 text-sun-400"><use href="#i-check"/></svg>Até 100 itens ativos</li>
+          <li class="flex gap-2"><svg class="h-5 w-5 shrink-0 text-sun-400"><use href="#i-check"/></svg>Cadastro com fotos</li>
+          <li class="flex gap-2"><svg class="h-5 w-5 shrink-0 text-sun-400"><use href="#i-check"/></svg>Controle de prazos e retiradas</li>
+          <li class="flex gap-2"><svg class="h-5 w-5 shrink-0 text-sun-400"><use href="#i-check"/></svg>Painel básico</li>
+        </ul>
+        <a href="#" class="mt-8 block rounded-xl border border-white/20 py-3 text-center font-bold transition hover:bg-white/10">Assinar Essencial</a>
+      </div>
+      <div class="reveal relative flex flex-col rounded-3xl bg-gradient-to-b from-brand-500 to-brand-700 p-8 shadow-2xl shadow-brand-500/30 lg:-my-4 lg:py-12">
+        <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-sun-400 px-4 py-1 text-xs font-extrabold text-ink-900">Mais escolhido</span>
+        <h3 class="text-lg font-bold">Profissional</h3><p class="mt-1 text-sm text-brand-100">Correspondência inteligente completa.</p>
+        <p class="mt-6"><span class="text-5xl font-extrabold" data-price="99">R$ 99</span><span class="text-brand-100">/mês</span></p>
+        <ul class="mt-6 flex-1 space-y-3 text-sm">
+          <li class="flex gap-2"><svg class="h-5 w-5 shrink-0 text-sun-300"><use href="#i-check"/></svg>Itens ilimitados</li>
+          <li class="flex gap-2"><svg class="h-5 w-5 shrink-0 text-sun-300"><use href="#i-check"/></svg>Correspondência por descrição, imagem e local</li>
+          <li class="flex gap-2"><svg class="h-5 w-5 shrink-0 text-sun-300"><use href="#i-check"/></svg>Alertas de prazo e histórico completo</li>
+          <li class="flex gap-2"><svg class="h-5 w-5 shrink-0 text-sun-300"><use href="#i-check"/></svg>Painel completo de movimentações</li>
+          <li class="flex gap-2"><svg class="h-5 w-5 shrink-0 text-sun-300"><use href="#i-check"/></svg>Suporte prioritário</li>
+        </ul>
+        <a href="#" class="mt-8 block rounded-xl bg-sun-400 py-3 text-center font-extrabold text-ink-900 shadow-lg transition hover:bg-sun-300">Assinar Profissional</a>
+      </div>
+      <div class="reveal flex flex-col rounded-3xl border border-white/10 bg-white/5 p-8">
+        <h3 class="text-lg font-bold">Organizações</h3><p class="mt-1 text-sm text-brand-200">Várias unidades e equipes.</p>
+        <p class="mt-6"><span class="text-4xl font-extrabold">Sob consulta</span></p>
+        <ul class="mt-6 flex-1 space-y-3 text-sm">
+          <li class="flex gap-2"><svg class="h-5 w-5 shrink-0 text-sun-400"><use href="#i-check"/></svg>Múltiplas unidades</li>
+          <li class="flex gap-2"><svg class="h-5 w-5 shrink-0 text-sun-400"><use href="#i-check"/></svg>Vários usuários por empresa</li>
+          <li class="flex gap-2"><svg class="h-5 w-5 shrink-0 text-sun-400"><use href="#i-check"/></svg>Implantação assistida</li>
+        </ul>
+        <a href="#" class="mt-8 block rounded-xl border border-white/20 py-3 text-center font-bold transition hover:bg-white/10">Falar com a equipe</a>
+      </div>
+    </div>
+    <p class="mt-8 text-center text-xs text-brand-300">* Valores ilustrativos: o plano de negócios ainda não define a tabela de preços.</p>
+  </div>
+</section>
+
+<!-- ========== DEPOIMENTOS ========== -->
+<section id="depoimentos" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+  <div class="reveal mx-auto max-w-2xl text-center">
+    <p class="text-sm font-bold uppercase tracking-widest text-brand-600">Depoimentos</p>
+    <h2 class="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">Quem usa, resolve mais rápido</h2>
+  </div>
+  <div class="mt-12 grid gap-6 md:grid-cols-3">
+    <figure class="reveal rounded-3xl border border-brand-100 bg-white p-7 shadow-lg shadow-brand-900/5">
+      <div class="flex gap-0.5 text-sun-400" aria-label="5 estrelas">★★★★★</div>
+      <blockquote class="mt-4 text-ink-700">“A gente vivia com um caderno que ninguém achava nada. Agora o cliente descreve o item e a resposta aparece na hora.”</blockquote>
+      <figcaption class="mt-6 flex items-center gap-3"><span class="grid h-11 w-11 place-items-center rounded-full bg-brand-600 font-bold text-white">MR</span><div class="text-sm"><p class="font-bold">Marina R.</p><p class="text-ink-500">Gerente de operações, shopping</p></div></figcaption>
+    </figure>
+    <figure class="reveal rounded-3xl border border-brand-100 bg-white p-7 shadow-lg shadow-brand-900/5">
+      <div class="flex gap-0.5 text-sun-400" aria-label="5 estrelas">★★★★★</div>
+      <blockquote class="mt-4 text-ink-700">“Eu tinha receio de expor tudo o que a gente guarda. Aqui o catálogo não fica público, e só aparece o que combina com a busca.”</blockquote>
+      <figcaption class="mt-6 flex items-center gap-3"><span class="grid h-11 w-11 place-items-center rounded-full bg-sun-400 font-bold text-ink-900">CS</span><div class="text-sm"><p class="font-bold">Carlos S.</p><p class="text-ink-500">Coordenador de segurança, universidade</p></div></figcaption>
+    </figure>
+    <figure class="reveal rounded-3xl border border-brand-100 bg-white p-7 shadow-lg shadow-brand-900/5">
+      <div class="flex gap-0.5 text-sun-400" aria-label="5 estrelas">★★★★★</div>
+      <blockquote class="mt-4 text-ink-700">“Perdi minha mochila num evento e nem imaginava onde procurar. Descrevi, apareceu a empresa e busquei no mesmo dia.”</blockquote>
+      <figcaption class="mt-6 flex items-center gap-3"><span class="grid h-11 w-11 place-items-center rounded-full bg-brand-800 font-bold text-white">JP</span><div class="text-sm"><p class="font-bold">Júlia P.</p><p class="text-ink-500">Usuária da busca pública</p></div></figcaption>
+    </figure>
+  </div>
+  <p class="mt-6 text-center text-[11px] text-ink-300">* Depoimentos fictícios, para o protótipo da página.</p>
+</section>
+
+<!-- ========== CTA FINAL ========== -->
+<section class="px-4 pb-20 sm:px-6 lg:px-8">
+  <div class="reveal mx-auto max-w-5xl rounded-3xl bg-gradient-to-r from-brand-600 to-brand-800 px-8 py-14 text-center text-white shadow-2xl shadow-brand-700/30">
+    <h2 class="text-3xl font-extrabold sm:text-4xl">Cada item achado é um dono esperando.</h2>
+    <p class="mx-auto mt-4 max-w-xl text-brand-100">Coloque sua empresa na rede de achados e perdidos e devolva mais, com menos trabalho.</p>
+    <a href="#precos" class="mt-8 inline-flex items-center gap-2 rounded-xl bg-sun-400 px-8 py-3.5 font-extrabold text-ink-900 shadow-xl transition hover:-translate-y-0.5 hover:bg-sun-300">Começar agora <svg class="h-5 w-5"><use href="#i-arrow"/></svg></a>
+  </div>
+</section>
+</main>
+
+<!-- ========== FOOTER ========== -->
+<footer class="border-t border-brand-100 bg-white">
+  <div class="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4 lg:px-8">
+    <div class="md:col-span-1">
+      <a href="#" class="flex items-center gap-2.5"><svg class="h-10 w-10"><use href="#logo-mark"/></svg><span class="text-lg font-extrabold">Perdido<span class="text-brand-600">?</span> Achado<span class="text-sun-500">!</span></span></a>
+      <p class="mt-4 text-sm text-ink-500">Achou aqui, volta pra casa.</p>
+    </div>
+    <div class="text-sm"><p class="font-bold">Produto</p><ul class="mt-3 space-y-2 text-ink-500"><li><a class="hover:text-brand-600" href="#recursos">Recursos</a></li><li><a class="hover:text-brand-600" href="#beneficios">Benefícios</a></li><li><a class="hover:text-brand-600" href="#precos">Preços</a></li></ul></div>
+    <div class="text-sm"><p class="font-bold">Legal</p><ul class="mt-3 space-y-2 text-ink-500"><li><a class="hover:text-brand-600" href="#">Termos de uso</a></li><li><a class="hover:text-brand-600" href="#">Política de privacidade</a></li><li><a class="hover:text-brand-600" href="#">LGPD</a></li></ul></div>
+    <div class="text-sm">
+      <p class="font-bold">Novidades por e-mail</p>
+      <form id="newsForm" class="mt-3 flex gap-2">
+        <label class="sr-only" for="newsEmail">E-mail</label>
+        <input id="newsEmail" type="email" required placeholder="seu@email.com" class="min-w-0 flex-1 rounded-xl border border-ink-300 px-3 py-2.5">
+        <button class="rounded-xl bg-brand-600 px-4 font-bold text-white hover:bg-brand-700">Assinar</button>
+      </form>
+      <p id="newsMsg" class="mt-2 hidden text-xs font-semibold text-green-700">Obrigado! Você está na lista.</p>
+    </div>
+  </div>
+  <div class="border-t border-brand-100 py-5 text-center text-xs text-ink-500">© 2026 Perdido? Achado! Projeto acadêmico de Gestão de Projetos.</div>
+</footer>
+
+<script>
+  // Dados dinâmicos
+  const features = [
+    ['i-box','Cadastro de itens','Categoria, descrição, fotos, data, local e prazo de armazenamento em um só formulário.'],
+    ['i-search','Busca sem cadastro','Qualquer pessoa descreve o que perdeu e consulta, sem criar conta.'],
+    ['i-sparkles','Correspondência inteligente','Cruza categoria, descrição, imagem, local e período e ordena por compatibilidade.'],
+    ['i-pin','Busca por proximidade','Mostra só itens dentro da área de pesquisa, perto de onde a pessoa perdeu.'],
+    ['i-handoff','Controle de retirada','Registra quem retirou, com dados e data, confirma a entrega e dá baixa no item.'],
+    ['i-clock','Controle de prazos','Alerta sobre itens perto do limite e atualiza o status quando o prazo encerra.'],
+    ['i-chart','Painel da empresa','Disponíveis, retirados, perto do prazo e histórico de movimentações num só lugar.'],
+    ['i-lock','Segurança e privacidade','Acesso restrito por login. O catálogo completo nunca fica público.']
+  ];
+  document.getElementById('featureGrid').innerHTML = features.map(([i,t,d]) => `
+    <article class="reveal group rounded-3xl border border-brand-100 bg-white p-6 shadow-lg shadow-brand-900/5 transition duration-300 hover:-translate-y-1.5 hover:border-brand-300 hover:shadow-2xl hover:shadow-brand-500/15">
+      <span class="grid h-12 w-12 place-items-center rounded-2xl bg-brand-100 text-brand-700 transition group-hover:bg-brand-600 group-hover:text-white"><svg class="h-6 w-6"><use href="#${i}"/></svg></span>
+      <h3 class="mt-5 font-bold">${t}</h3><p class="mt-2 text-sm leading-relaxed text-ink-700">${d}</p>
+    </article>`).join('');
+
+  const rows = [
+    ['Encontrar um item', false, true], ['Busca sem ligar para a empresa', false, true],
+    ['Fotos e características padronizadas', false, true], ['Alerta de prazo de guarda', false, true],
+    ['Registro de quem retirou', false, true], ['Histórico de movimentações', false, true],
+    ['Catálogo protegido do público', true, true]
+  ];
+  const ic = ok => ok ? '<svg class="mx-auto h-5 w-5 text-green-600"><use href="#i-check"/></svg>' : '<svg class="mx-auto h-5 w-5 text-red-400"><use href="#i-x"/></svg>';
+  document.getElementById('compareRows').innerHTML = rows.map(([l,a,b]) => `
+    <div class="grid grid-cols-[1.1fr_1fr_1fr] items-center"><div class="p-4 font-semibold sm:p-5">${l}</div><div class="p-4 text-center sm:p-5">${ic(a)}</div><div class="bg-brand-50/60 p-4 text-center sm:p-5">${ic(b)}</div></div>`).join('');
+
+  // Menu mobile
+  const menuBtn = document.getElementById('menuBtn'), mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('hidden') === false;
+    menuBtn.setAttribute('aria-expanded', open);
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { mobileMenu.classList.add('hidden'); menuBtn.setAttribute('aria-expanded', false); }));
+
+  // Abas do mockup
+  const tabEmp = document.getElementById('tabEmp'), tabBusca = document.getElementById('tabBusca');
+  const paneEmp = document.getElementById('paneEmp'), paneBusca = document.getElementById('paneBusca');
+  function setTab(emp) {
+    paneEmp.classList.toggle('hidden', !emp); paneBusca.classList.toggle('hidden', emp);
+    tabEmp.classList.toggle('tab-active', emp); tabBusca.classList.toggle('tab-active', !emp);
+    tabEmp.setAttribute('aria-selected', emp); tabBusca.setAttribute('aria-selected', !emp);
+  }
+  tabEmp.onclick = () => setTab(true); tabBusca.onclick = () => setTab(false);
+  document.getElementById('searchForm').addEventListener('submit', e => {
+    e.preventDefault(); document.getElementById('searchResult').classList.remove('hidden');
+  });
+
+  // Contadores
+  function countUp(el) {
+    const target = +el.dataset.count; let n = 0; const step = Math.max(1, Math.ceil(target / 40));
+    const t = setInterval(() => { n = Math.min(target, n + step); el.textContent = n; if (n >= target) clearInterval(t); }, 25);
+  }
+
+  // Revelar ao rolar
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); e.target.querySelectorAll('[data-count]').forEach(countUp); io.unobserve(e.target); }
+  }), { threshold: .15 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Preço mensal/anual
+  const bm = document.getElementById('billMonthly'), by = document.getElementById('billYearly');
+  function setBilling(yearly) {
+    document.querySelectorAll('[data-price]').forEach(el => {
+      const p = +el.dataset.price; el.textContent = 'R$ ' + (yearly ? Math.round(p * 0.8) : p);
+    });
+    bm.className = 'rounded-lg px-5 py-2 ' + (yearly ? 'text-white' : 'bg-white text-ink-900');
+    by.className = 'rounded-lg px-5 py-2 ' + (yearly ? 'bg-white text-ink-900' : 'text-white');
+    bm.setAttribute('aria-pressed', !yearly); by.setAttribute('aria-pressed', yearly);
+  }
+  bm.onclick = () => setBilling(false); by.onclick = () => setBilling(true);
+
+  // Newsletter
+  document.getElementById('newsForm').addEventListener('submit', e => {
+    e.preventDefault(); document.getElementById('newsMsg').classList.remove('hidden'); e.target.reset();
+  });
+</script>
+</body>
+</html>
